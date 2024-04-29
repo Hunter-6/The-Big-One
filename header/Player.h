@@ -4,11 +4,28 @@
 #include "GameObject.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <iostream>
+#include <vector>
+#include "Animation.h"
 
 enum class AttackDirection {
     LEFT,
     RIGHT
 };
+
+// class Animation {
+// public : 
+//     Animation(std::vector<SDL_Texture*>frames, int frameDuration);
+//     void update();
+//     SDL_Texture* getCurrentFrame()const;
+// private:
+//     std::vector<SDL_Texture*> m_frames;
+//     int m_frameDuration;
+//     int m_currentFrameIndex;
+//     int m_frameTime;
+
+
+// };
 
 class Player : public GameObject {
 public:
@@ -35,7 +52,10 @@ private:
     int m_jumpVelocity; // Vận tốc nhảy
     int m_attackVelocity; // Vận tốc tấn công
     int m_initialY; 
-    
+
+    SDL_Renderer* m_renderer;
+    std::vector<SDL_Texture*> m_jumpFrames;
+    Animation* m_animation;
 
 
     

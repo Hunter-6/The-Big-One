@@ -1,9 +1,8 @@
 #include "Player.h"
-#include <cmath> 
 
 Player::Player(SDL_Renderer* renderer, const char* texturePath, int x, int y, int width, int height)
     : GameObject(renderer, texturePath, (SCREEN_WIDTH / 2) - 10, ((SCREEN_HEIGHT / 9) * 8) - 15, width, height), m_isJumping(false), m_isAttacking(false),
-      m_jumpHeight(100), m_jumpSpeed(10), m_attackCooldown(15), m_jumpVelocity(0), m_initialY(((SCREEN_HEIGHT/9)*8)-15) {
+      m_jumpHeight(100), m_jumpSpeed(3000), m_attackCooldown(15), m_jumpVelocity(0), m_initialY(((SCREEN_HEIGHT/9)*8)-15) {
     // Khởi tạo các thuộc tính riêng của lớp Player
     m_jumpTimer = SDL_AddTimer(m_jumpSpeed, JumpTimerCallback, this);
 }
