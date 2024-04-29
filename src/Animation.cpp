@@ -4,7 +4,7 @@
 #include <string>
 
 // Thời gian giữa các frame
-const int FRAME_TIME = 100;
+const int FRAME_TIME = 500;
 
 // Hàm khởi tạo Animation
 

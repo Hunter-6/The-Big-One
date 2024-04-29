@@ -1,14 +1,24 @@
 #include "Player.h"
 
 Player::Player(SDL_Renderer* renderer, const char* texturePath, int x, int y, int width, int height)
-    : GameObject(renderer, texturePath, (SCREEN_WIDTH / 2) - 10, ((SCREEN_HEIGHT / 9) * 8) - 15, width, height), m_isJumping(false), m_isAttacking(false),
+    : GameObject(renderer, texturePath, (SCREEN_WIDTH / 2) - 10, ((SCREEN_HEIGHT / 9) * 8) - 15, width, height), m_isJumping(false), m_isAttacking(false), m_renderer(renderer), m_animation(nullptr),
       m_jumpHeight(100), m_jumpSpeed(3000), m_attackCooldown(15), m_jumpVelocity(0), m_initialY(((SCREEN_HEIGHT/9)*8)-15) {
     // Khởi tạo các thuộc tính riêng của lớp Player
     m_jumpTimer = SDL_AddTimer(m_jumpSpeed, JumpTimerCallback, this);
+
+    //animation
+    m_animation = new Animation(renderer,"D:/game study UET/projects/true-proj/The-Big-One/assets/Player/idle", 6, 100);
 }
 
 Player::~Player() {
     // Hủy bỏ bất kỳ tài nguyên nào cần thiết
+    SDL_RemoveTimer(m_jumpTimer);
+
+    if (m_animation){
+        delete m_animation;
+        m_animation = nullptr;
+
+    }
     SDL_RemoveTimer(m_jumpTimer);
 }
 
@@ -76,6 +86,11 @@ void Player::attackRight() {
 void Player::update() {
     // Cập nhật trạng thái của lợn
     GameObject::update();
+
+    if (m_animation){
+        m_animation->update();
+    }
+
     if (m_isJumping) {
         m_position.y += m_jumpVelocity;
         m_jumpVelocity += GRAVITY;
@@ -97,6 +112,12 @@ void Player::update() {
 }
 
 void Player::render() {
+
+    GameObject::render();
+
+    if (m_animation){
+        m_animation->render(m_position.x + 50, m_position.y+90, m_position.w + 69, m_position.h + 44);
+    }
     // Vẽ lợn lên màn hình
     SDL_RenderCopy(m_renderer, m_texture, NULL, &m_position);
 
