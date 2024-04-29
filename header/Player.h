@@ -21,6 +21,7 @@ public:
 
     // Các phương thức khác tùy thuộc vào yêu cầu của trò chơi
     void jump();
+    void stopJump();
     void attackLeft();
     void attackRight();
 
@@ -33,10 +34,18 @@ private:
     int m_attackCooldown; // Thời gian cooldown giữa các đợt tấn công
     int m_jumpVelocity; // Vận tốc nhảy
     int m_attackVelocity; // Vận tốc tấn công
+    int m_initialY; 
+    
+
+
+    
     AttackDirection m_attackDirection;
+    SDL_TimerID m_jumpTimerID;
+    SDL_TimerID m_jumpTimer;
 
     static const int GRAVITY = 1;
-    int m_initialY; 
+    static Uint32 JumpTimerCallback(Uint32 interval, void* param);
+    
 };
 
 #endif // PLAYER_H
