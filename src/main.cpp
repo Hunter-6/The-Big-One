@@ -42,7 +42,7 @@ int main(int argv, char* argc[]) {
     Background background(renderer, "assets/Background layers", NUMBER_OF_LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, LAYER_HEIGHT);
 
     //Tạo đối tượng player
-    Player player(renderer, "assets/Player/idle", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40);
+    Player player(renderer, "assets/Player/idles", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40);
 
     // Vòng lặp chính của game
     bool quit = false;

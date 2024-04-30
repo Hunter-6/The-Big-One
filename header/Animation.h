@@ -2,16 +2,24 @@
 #define ANIMATION_H
 
 #include "GameObject.h"
+#include "Player.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <map>
 
 // const int FRAME_TIME = 100;
 
+// std::vector<std::pair<std::string, std::string>> animationPaths = {
+//     {"idle", "assets/Player/idles"},
+//     {"Left", "assets/Player/left"},
+//     {"Right", "assets/Player/attack"}
+// };
+
 class Animation {
 public:
-    Animation(SDL_Renderer* renderer, const std::string& folderPath, int frameCount, int frameDuration);
+    Animation(SDL_Renderer* renderer, const std::vector<std::pair<std::string, std::string>>& animationPaths, int frameCount, int frameDuration);
     ~Animation();
     
     void update(); // Cập nhật frame hiện tại của animation
@@ -19,6 +27,7 @@ public:
 
 private:
     SDL_Renderer* m_renderer;
+    std::map<std::string, std::vector<SDL_Texture*>> m_animationFrames;
     std::vector<SDL_Texture*> m_frames; // Danh sách các frame ảnh
     int m_frameCount; // Số lượng frame ảnh
     int m_frameDuration; // Thời gian hiển thị của mỗi frame

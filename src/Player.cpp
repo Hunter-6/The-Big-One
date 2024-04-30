@@ -1,13 +1,17 @@
 #include "Player.h"
 
-Player::Player(SDL_Renderer* renderer, const char* texturePath, int x, int y, int width, int height)
+Player::Player(SDL_Renderer* renderer, const char* texturePath, int x, int y, int width, int height, const std::vector<std::string>& animationPaths)
     : GameObject(renderer, texturePath, (SCREEN_WIDTH / 2) - 10, ((SCREEN_HEIGHT / 9) * 8) - 15, width, height), m_isJumping(false), m_isAttacking(false), m_renderer(renderer), m_animation(nullptr),
-      m_jumpHeight(100), m_jumpSpeed(3000), m_attackCooldown(15), m_jumpVelocity(0), m_initialY(((SCREEN_HEIGHT/9)*8)-15) {
+      m_jumpHeight(100), m_jumpSpeed(1000), m_attackCooldown(15), m_jumpVelocity(0), m_initialY(((SCREEN_HEIGHT/9)*8)-15), m_animationPaths(animationPaths), m_currentStatusIndex(0) {
     // Khởi tạo các thuộc tính riêng của lớp Player
     m_jumpTimer = SDL_AddTimer(m_jumpSpeed, JumpTimerCallback, this);
 
     //animation
-    m_animation = new Animation(renderer,"D:/game study UET/projects/true-proj/The-Big-One/assets/Player/idle", 6, 100);
+    if (!m_animationPaths.empty()){
+        m_animation = new Animation(renderer, m_animationPaths[0].c_str(), 6, 130);
+
+    }
+    
 }
 
 Player::~Player() {
@@ -19,7 +23,6 @@ Player::~Player() {
         m_animation = nullptr;
 
     }
-    SDL_RemoveTimer(m_jumpTimer);
 }
 
 Uint32 Player::JumpTimerCallback(Uint32 interval, void* param) {
@@ -116,13 +119,13 @@ void Player::render() {
     GameObject::render();
 
     if (m_animation){
-        m_animation->render(m_position.x + 50, m_position.y+90, m_position.w + 69, m_position.h + 44);
+        m_animation->render(m_position.x-35, m_position.y-45, m_position.w + 79, m_position.h + 44);
     }
     // Vẽ lợn lên màn hình
     SDL_RenderCopy(m_renderer, m_texture, NULL, &m_position);
 
-    //vẽ tạm hình vuôgn 
-    SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
-    SDL_Rect rect = {m_position.x, m_position.y, m_position.w, m_position.h};
-    SDL_RenderDrawRect(m_renderer, &rect);
+    // //vẽ tạm hình vuôgn 
+    // SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
+    // SDL_Rect rect = {m_position.x, m_position.y, m_position.w, m_position.h};
+    // SDL_RenderDrawRect(m_renderer, &rect);
 }

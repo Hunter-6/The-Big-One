@@ -4,30 +4,38 @@
 #include <string>
 
 // Thời gian giữa các frame
-const int FRAME_TIME = 500;
+const int FRAME_TIME = 5;
 
-// Hàm khởi tạo Animation
-
-Animation::Animation(SDL_Renderer* renderer, const std::string& folderPath, int frameCount, int frameDuration)
+Animation::Animation(SDL_Renderer* renderer, const std::vector<std::pair<std::string, std::string>>& animationPaths, int frameCount, int frameDuration)
     : m_renderer(renderer), m_frameCount(frameCount), m_frameDuration(frameDuration), m_currentFrameIndex(0), m_frameTime(0) {
-    // Load các frame ảnh từ folderPath và lưu vào một vector
-    for (int i = 0; i < frameCount; ++i) {
-        std::string imagePath = folderPath + "/Warrior_Idle_" + std::to_string(i) + ".png";
-        SDL_Surface* surface = IMG_Load(imagePath.c_str());
-        if (surface) {
-            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-            if (texture) {
-                m_frames.push_back(texture);
+    
+    for (const auto& entry : animationPaths) {
+        const std::string& status = entry.first;
+        const std::string& folderPath = entry.second;
+        std::vector<SDL_Texture*> frames; 
+        // Load các frame ảnh từ folderPath và lưu vào một vector
+        for (int i = 0; i < frameCount; ++i) {
+            std::string imagePath = folderPath + "/Warrior_" + status + std::to_string(i) + ".png";
+            SDL_Surface* surface = IMG_Load(imagePath.c_str());
+            if (surface) {
+                SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+                if (texture) {
+                    frames.push_back(texture);
+                }
+                SDL_FreeSurface(surface);
             }
-            SDL_FreeSurface(surface);
         }
+        // Lưu các frame ảnh vào một map
+        m_animationFrames[status] = frames;
     }
 }
 
 Animation::~Animation() {
     // Giải phóng bộ nhớ cho các frame ảnh
-    for (SDL_Texture* texture : m_frames) {
-        SDL_DestroyTexture(texture);
+    for (auto& entry : m_animationFrames) {
+        for (SDL_Texture* texture : entry.second) {
+            SDL_DestroyTexture(texture);
+        }
     }
 }
 
@@ -43,5 +51,6 @@ void Animation::update() {
 void Animation::render(int x, int y, int width, int height) {
     // Render frame hiện tại lên màn hình
     SDL_Rect destRect = { x, y, width, height };
-    SDL_RenderCopy(m_renderer, m_frames[m_currentFrameIndex], nullptr, &destRect);
+    const std::string& status = m_animationPaths[m_currentStatusIndex].first;
+    SDL_RenderCopy(m_renderer, m_animationFrames[status][m_currentFrameIndex], nullptr, &destRect);
 }
