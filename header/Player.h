@@ -15,7 +15,7 @@ enum class AttackDirection {
 
 class Player : public GameObject {
 public:
-    Player(SDL_Renderer* renderer, const char* texturePath, int x, int y, int width, int height, const std::vector<std::string>& animationPaths);
+    Player(SDL_Renderer* renderer, const std::vector<std::string>& animationPaths, int x, int y, int width, int height);
     ~Player();
 
     void handleInput(SDL_Event& event);

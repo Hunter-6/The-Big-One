@@ -1,15 +1,15 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Background.h"
-#include "PLayer.h"
+#include "Player.h"
 #include <iostream>
 
 // const int SCREEN_WIDTH = 800;
 // const int SCREEN_HEIGHT = 600;
 // const int NUMBER_OF_LAYERS = 12;
-// const int LAYER_HEIGHT = 0.75;
+// const float LAYER_HEIGHT = 0.75f;
 
-int main(int argv, char* argc[]) {
+int main(int argc, char* argv[]) {
     // Khởi tạo SDL và SDL_Image
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -41,8 +41,16 @@ int main(int argv, char* argc[]) {
     // Tạo đối tượng Background
     Background background(renderer, "assets/Background layers", NUMBER_OF_LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, LAYER_HEIGHT);
 
+    // Khai báo đường dẫn cho animation của player
+    std::vector<std::string> animationPaths = {
+        "assets/Player/idles",
+        "assets/Player/left",
+        "assets/Player/right"
+    };
+
+
     //Tạo đối tượng player
-    Player player(renderer, "assets/Player/idles", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40);
+    Player player(renderer, "assets/Player/idles", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40, animationPaths);
 
     // Vòng lặp chính của game
     bool quit = false;

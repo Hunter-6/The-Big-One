@@ -10,7 +10,7 @@
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const int NUMBER_OF_LAYERS = 12;
-const int LAYER_HEIGHT = 0.75;
+const float LAYER_HEIGHT = 0.75f;
 
 
 class GameObject {
