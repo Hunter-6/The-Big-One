@@ -13,6 +13,23 @@ enum class AttackDirection {
     RIGHT
 };
 
+enum class PlayerState {
+    IDLE,
+<<<<<<< HEAD
+    ATTACKING_LEFT,
+    ATTACKING_RIGHT,
+    JUMPING,
+    MOVING_LEFT,
+    MOVING_RIGHT
+=======
+    MOVING_LEFT,
+    MOVING_RIGHT,
+    ATTACKING_LEFT,
+    ATTACKING_RIGHT,
+    JUMPING
+>>>>>>> 1738b14fe0382c4d7ab244b7339f38bd04591d67
+};
+
 class Player : public GameObject {
 public:
     Player(SDL_Renderer* renderer, const std::vector<std::string>& animationPaths, int x, int y, int width, int height);
@@ -46,6 +63,13 @@ private:
     SDL_TimerID m_jumpTimer;
     const float GRAVITY = 1.0f;
     static Uint32 JumpTimerCallback(Uint32 interval, void* param);
+<<<<<<< HEAD
+    PlayerState currentState;
+    
+=======
+
+    PlayerState currentState;
+>>>>>>> 1738b14fe0382c4d7ab244b7339f38bd04591d67
 };
 
 #endif // PLAYER_H

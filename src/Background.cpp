@@ -1,4 +1,5 @@
 #include "Background.h"
+#include <string>
 #include <iostream>
 
 Background::Background(SDL_Renderer* renderer, const char* folderPath, int numberOfLayers, int screenWidth, int screenHeight, int layerHeight) 

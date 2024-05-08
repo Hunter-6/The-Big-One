@@ -41,17 +41,17 @@ void Player::handleInput(SDL_Event& event) {
         switch (event.key.keysym.sym) {
             case SDLK_SPACE:
             case SDLK_w:
+                currentState = PlayerState::JUMPING;
                 jump();
                 break;
             case SDLK_RETURN:
             case SDLK_a:
             case SDLK_LEFT:
-                // m_animation.setAnimation("left");
-                attackLeft();
+                currentState = PlayerState::ATTACKING_LEFT;
                 break;
             case SDLK_d:
             case SDLK_RIGHT:
-                attackRight();
+                currentState = PlayerState::ATTACKING_RIGHT;
                 break;
             // Xử lý các phím điều khiển khác tùy thuộc vào yêu cầu của trò chơi
         }
@@ -95,6 +95,19 @@ void Player::update() {
     // Cập nhật trạng thái của lợn
     GameObject::update();
 
+    if (m_isAttacking && m_attackDirection == AttackDirection::LEFT) {
+        currentState = PlayerState::ATTACKING_LEFT;
+    // } else if (/* check for moving left */) {
+    //     currentState = PlayerState::MOVING_LEFT;
+    } else if (m_isAttacking && m_attackDirection == AttackDirection::RIGHT) {
+        currentState = PlayerState::ATTACKING_RIGHT;
+    } else if (m_isJumping) {
+        currentState = PlayerState::JUMPING;
+    } else {
+        currentState = PlayerState::IDLE;
+    }
+
+
     if (m_animation){
         m_animation->update();
     }
@@ -123,9 +136,9 @@ void Player::render() {
 
     GameObject::render();
 
-    if (m_animation){
-        m_animation->render(m_position.x-35, m_position.y-45, m_position.w + 79, m_position.h + 44);
-    }
+    // if (m_animation){
+    //     m_animation->render(m_position.x-35, m_position.y-45, m_position.w + 79, m_position.h + 44, currentState);
+    // }
     // Vẽ lợn lên màn hình
     SDL_RenderCopy(m_renderer, m_texture, NULL, &m_position);
 

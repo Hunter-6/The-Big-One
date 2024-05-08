@@ -9,17 +9,9 @@
 // const int NUMBER_OF_LAYERS = 12;
 // const float LAYER_HEIGHT = 0.75f;
 
+
 int main(int argc, char* argv[]) {
-    // Khởi tạo SDL và SDL_Image
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        std::cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
-        SDL_Quit();
-        return 1;
-    }
+    // ... (Khởi tạo SDL, SDL_Image) ...
 
     // Tạo cửa sổ SDL
     SDL_Window* window = SDL_CreateWindow("Bloody RED HOOD ", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -45,12 +37,19 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> animationPaths = {
         "assets/Player/idles",
         "assets/Player/left",
-        "assets/Player/right"
+        "assets/Player/right",
+        "assets/Player/attack_left",
+        "assets/Player/attack_right"
     };
 
+<<<<<<< HEAD
+    // Tạo đối tượng player
+    Player player(renderer, animationPaths, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40);
+=======
 
     //Tạo đối tượng player
-    Player player(renderer, "assets/Player/idles", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40, animationPaths);
+    Player player(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 9, 20, 40, animationPaths);
+>>>>>>> 1738b14fe0382c4d7ab244b7339f38bd04591d67
 
     // Vòng lặp chính của game
     bool quit = false;
@@ -58,10 +57,36 @@ int main(int argc, char* argv[]) {
         // Xử lý sự kiện
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
+            switch (event.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.sym) {
+                        case SDLK_SPACE:
+                        case SDLK_w:
+                            player.jump();
+                            break;
+                        case SDLK_RETURN:
+                        case SDLK_a:
+                        case SDLK_LEFT:
+                            // player.moveLeft();
+                            player.attackLeft();
+                            break;
+                        case SDLK_d:
+                        case SDLK_RIGHT:
+                            // player.moveRight();
+                            player.attackRight();
+                            break;
+                        // case SDLK_q:
+                        //     player.attackLeft();
+                        //     break;
+                        // case SDLK_e:
+                        //     player.attackRight();
+                        //     break;
+                    }
+                    break;
             }
-            player.handleInput(event);
         }
 
         // Xóa màn hình
@@ -70,10 +95,10 @@ int main(int argc, char* argv[]) {
         // Vẽ background
         background.render();
 
-        //cập nhật trạng thái player
+        // Cập nhật trạng thái player
         player.update();
 
-        //vẽ player lên màn hình
+        // Vẽ player lên màn hình
         player.render();
 
         // Cập nhật màn hình
@@ -85,5 +110,6 @@ int main(int argc, char* argv[]) {
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
+
     return 0;
 }
