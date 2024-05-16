@@ -37,7 +37,7 @@ void Graphics::init()
     cellEmpty = loadTexture("img//cell_empty.png");
     cellX = loadTexture("img//cell_x.png");
     cellO = loadTexture("img//cell_o.png");
-    cellMine = loadTexture("img//cell_mines.png"); // Load mine texture
+    cellMine = loadTexture("img//cell_mines.png"); 
     cellFlag = loadTexture("img//cell_flags.png");
 }
 
@@ -54,8 +54,19 @@ void Graphics::renderTexture(SDL_Texture *texture, int x, int y)
     SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
 }
 
+std::string formatTime(Uint32 timeInMilliseconds) {
+    Uint32 totalSeconds = timeInMilliseconds / 1000;
+    Uint32 seconds = totalSeconds % 60;
+    Uint32 minutes = totalSeconds / 60;
+    char buffer[10];
+    sprintf(buffer, "%02u:%02u", minutes, seconds);
+    return std::string(buffer);
+}
+
+
 void Graphics::render( TicTacToe &game)
 {
+    SDL_RenderClear(renderer);
     // for (int i = 0; i < BOARD_SIZE; i++)
     //     for (int j = 0; j < BOARD_SIZE; j++)
     //     {
@@ -104,24 +115,56 @@ void Graphics::render( TicTacToe &game)
     }
 
     // Display health information using SDL_ttf
-    char healthInfoX[100];
-    sprintf(healthInfoX, "Health X: %d", game.healthX);
-    SDL_Color textColor = {255, 255, 255}; // White color
-    SDL_Surface *textSurfaceX = TTF_RenderText_Solid(font, healthInfoX, textColor);
-    SDL_Texture *textTextureX = SDL_CreateTextureFromSurface(renderer, textSurfaceX);
-    SDL_Rect textRectX = {10, 10, 200, 30}; // Adjust position and size accordingly
-    SDL_RenderCopy(renderer, textTextureX, NULL, &textRectX);
-    SDL_DestroyTexture(textTextureX);
-    SDL_FreeSurface(textSurfaceX);
+    // char healthInfoX[100];
+    // sprintf(healthInfoX, "Health X: %d", game.healthX);
+    // SDL_Color textColor = {255, 255, 255}; // White color
+    // SDL_Surface *textSurfaceX = TTF_RenderText_Solid(font, healthInfoX, textColor);
+    // SDL_Texture *textTextureX = SDL_CreateTextureFromSurface(renderer, textSurfaceX);
+    // SDL_Rect textRectX = {10, 10, 200, 30}; // Adjust position and size accordingly
+    // SDL_RenderCopy(renderer, textTextureX, NULL, &textRectX);
+    // SDL_DestroyTexture(textTextureX);
+    // SDL_FreeSurface(textSurfaceX);
 
-    char healthInfoO[100];
-    sprintf(healthInfoO, "Health O: %d", game.healthO);
-    SDL_Surface *textSurfaceO = TTF_RenderText_Solid(font, healthInfoO, textColor);
-    SDL_Texture *textTextureO = SDL_CreateTextureFromSurface(renderer, textSurfaceO);
-    SDL_Rect textRectO = {SCREEN_WIDTH - 210, 10, 200, 30}; // Adjust position for player O on the top right
-    SDL_RenderCopy(renderer, textTextureO, NULL, &textRectO);
-    SDL_DestroyTexture(textTextureO);
-    SDL_FreeSurface(textSurfaceO);
+    // char healthInfoO[100];
+    // sprintf(healthInfoO, "Health O: %d", game.healthO);
+    // SDL_Surface *textSurfaceO = TTF_RenderText_Solid(font, healthInfoO, textColor);
+    // SDL_Texture *textTextureO = SDL_CreateTextureFromSurface(renderer, textSurfaceO);
+    // SDL_Rect textRectO = {SCREEN_WIDTH - 210, 10, 200, 30}; // Adjust position for player O on the top right
+    // SDL_RenderCopy(renderer, textTextureO, NULL, &textRectO);
+    // SDL_DestroyTexture(textTextureO);
+    // SDL_FreeSurface(textSurfaceO);
+
+    // //score
+    // char scoreInfoX[0], scoreInfoO[0];
+    // sprintf(scoreInfoX, "Score X: %d", game.scorePlayer1);
+    // sprintf(scoreInfoO, "Score O: %d", game.scorePlayer2);
+    // renderText(scoreInfoX, 10, 50, textColor);  // Adjust Y to be below Health X
+    // renderText(scoreInfoO, SCREEN_WIDTH - 210, 50, textColor);  // Adjust Y to be below Health O
+
+    // // Calculate and display remaining time
+    // Uint32 remainingTime = (game.gameTime - (SDL_GetTicks() - game.startTime)) / 1000;  // in seconds
+    // char timeText[100];
+    // sprintf(timeText, "Time: %d", remainingTime);
+    // renderText(timeText, SCREEN_WIDTH / 2 - 50, 10, textColor);  // Middle top of the screen
+
+    // Uint32 elapsed = SDL_GetTicks() - game.startTime;
+    // Uint32 remainingTime = (elapsed < game.gameTime) ? (game.gameTime - elapsed) : 0;
+    // std::string timeText = "Time: " + formatTime(remainingTime);
+
+    //tối ưu hoá 
+    SDL_Color textColor = {255, 255, 255}; // Màu trắng
+    std::string healthInfoX = "Health X: " + std::to_string(game.healthX);
+    std::string healthInfoO = "Health O: " + std::to_string(game.healthO);
+    std::string scoreInfoX = "Score X: " + std::to_string(game.scorePlayer1);
+    std::string scoreInfoO = "Score O: " + std::to_string(game.scorePlayer2);
+    std::string timeText = "Time: " + formatTime(SDL_GetTicks() - game.startTime);
+
+
+    renderText(healthInfoX, 10, 50, textColor); 
+    renderText(healthInfoO, SCREEN_WIDTH - 210, 50, textColor);
+    renderText(scoreInfoX, 10, 80, textColor);
+    renderText(scoreInfoO, SCREEN_WIDTH - 210, 80, textColor);
+    renderText(timeText, SCREEN_WIDTH / 2 - 50, 20, textColor);
 
     presentScene();
 }
@@ -129,13 +172,21 @@ void Graphics::render( TicTacToe &game)
 void Graphics::renderText(const std::string &message, int x, int y, SDL_Color color)
 {
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, message.c_str(), color);
+    if (textSurface == NULL){
+        std::cerr << "Unable to render text texture: " << TTF_GetError() << std::endl;
+        return;
+    }
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    // int text_width = surface->w;
-    // int text_height = surface->h;
+    if (textTexture == NULL) {
+        std::cerr << "Unable to create texture: " << SDL_GetError() << std::endl;
+        return;
+    }
     SDL_Rect renderQuad = {x, y, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &renderQuad);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+    // TTF_CloseFont(font);
+    // TTF_Quit();
 }
 
 void Graphics::presentScene()

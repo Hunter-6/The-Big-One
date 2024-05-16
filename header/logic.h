@@ -6,40 +6,69 @@
 #include <random>
 #include <cstring>
 
-// struct Graphics;
+#include "graphics.h"
 
 #define BOARD_SIZE 20
 #define EMPTY_CELL ' '
 #define O_CELL 'o'
 #define X_CELL 'x'
 
-struct TicTacToe {
+class Graphics;
+
+class TicTacToe {
+private:
+
+public:
+    
+    Uint32 gameTime;
+    Uint32 startTime;
+    Uint32 remainingTime;
+
+    void startGame();
+    void checkGameTime();
+    void endGame();
+
     int board[BOARD_SIZE][BOARD_SIZE];
     int mines[BOARD_SIZE][BOARD_SIZE];
     bool flags[BOARD_SIZE][BOARD_SIZE];
 
-    // Graphics& graphics;
-    // TicTacToe(Graphics& graphics);
-
     int currentPlayer;
     char nextMove = O_CELL;
     bool game_over = false;
-    bool showMines = false;
+
+    bool checkWin(char playerSymbol);
+    bool checkLine(int startRow, int startCol, int dRow, int dCol, char playerSymbol);
+    
 
     int healthX = 100;
     int healthO = 100;
+    int scorePlayer1 = 0;
+    int scorePlayer2 = 0;
+
+    
+    void placeMines(int mineCount);
+    void displayDamageMessage(int damage);
+    void updateScore(int player);
+    
+
+    int calculateDamage();
+    std::string createMessageBasedOnDamage(int damage);
+
+    Graphics& graphics;
+    TicTacToe(Graphics& graphics);
 
 
     void init();
     void move(int row, int col);
-    void placeMines(int mineCount);
     void placeFlags(int row, int col);
-    bool checkWin();
-    // void showMines(SDL_Renderer* renderer, SDL_Texture* cellMineTexture);
+    bool showMines = false;
+
+
+
 };
 
 #endif
 
 
 
-void showMines(SDL_Renderer* renderer, SDL_Texture* mineTexture);  // Add declaration
+

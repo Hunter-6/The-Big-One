@@ -49,14 +49,17 @@ int main(int argc, char *argv[])
     Graphics graphics;
     graphics.init();
 
-    TicTacToe game;
+    TicTacToe game(graphics);
     game.init();
     graphics.render(game);
+    game.startGame();
+
 
     int x, y;
     SDL_Event event;
     bool quit = false;
     while (!quit) {
+        game.checkGameTime();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
