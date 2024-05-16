@@ -19,7 +19,7 @@ void waitUntilKeyPressed()
     }
 }
 
-void processClick(int x, int y, Tictactoe& game) {
+void processClick(int x, int y, TicTacToe& game, int buttonType) {
 
     int boardWidth = BOARD_SIZE * CELL_SIZE;
     int boardHeight = BOARD_SIZE * CELL_SIZE;
@@ -29,8 +29,18 @@ void processClick(int x, int y, Tictactoe& game) {
     int clickedCol = ((x - BOARD_X) / CELL_SIZE) - 7;
     int clickedRow = ((y - BOARD_Y) / CELL_SIZE) - 5;
 
+
+
+
     if (clickedRow >= 0 && clickedRow < BOARD_SIZE && clickedCol >= 0 && clickedCol < BOARD_SIZE) {
-        game.move(clickedRow, clickedCol);
+        if (buttonType == SDL_BUTTON_LEFT){
+            game.move(clickedRow, clickedCol);
+
+        }
+        if (buttonType == SDL_BUTTON_RIGHT){
+            game.placeFlags(clickedRow, clickedCol);
+        }
+
     }
 }
 
@@ -39,7 +49,7 @@ int main(int argc, char *argv[])
     Graphics graphics;
     graphics.init();
 
-    Tictactoe game;
+    TicTacToe game;
     game.init();
     graphics.render(game);
 
@@ -53,15 +63,20 @@ int main(int argc, char *argv[])
                     quit = true;
                     break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_m) {
+                    if (event.key.keysym.sym == SDLK_m){
                         game.showMines = !game.showMines;
-                        SDL_RenderClear(graphics.renderer);  // Clear the renderer
+                        SDL_RenderClear(graphics.renderer);
                         graphics.render(game);
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     SDL_GetMouseState(&x, &y);
-                    processClick(x, y, game);
+                    // processClick(x, y, game, event.button.button);
+                    if (event.button.button == SDL_BUTTON_LEFT){
+                        processClick(x, y, game, SDL_BUTTON_LEFT);
+                    } else if ( event.button.button == SDL_BUTTON_RIGHT) {
+                        processClick(x,y, game, SDL_BUTTON_RIGHT);
+                    }
                     SDL_RenderClear(graphics.renderer);  // Clear the renderer
                     graphics.render(game);
                     break;
