@@ -153,6 +153,8 @@ void Graphics::render( TicTacToe &game)
 
     //tối ưu hoá 
     SDL_Color textColor = {255, 255, 255}; // Màu trắng
+    SDL_Color textColor1 = {255, 0, 0, 244};
+    SDL_Color textColor2 = {0, 0, 255, 255};
     std::string healthInfoX = "Health X: " + std::to_string(game.healthX);
     std::string healthInfoO = "Health O: " + std::to_string(game.healthO);
     std::string scoreInfoX = "Score X: " + std::to_string(game.scorePlayer1);
@@ -162,9 +164,9 @@ void Graphics::render( TicTacToe &game)
 
     renderText(healthInfoX, 10, 50, textColor); 
     renderText(healthInfoO, SCREEN_WIDTH - 210, 50, textColor);
-    renderText(scoreInfoX, 10, 80, textColor);
-    renderText(scoreInfoO, SCREEN_WIDTH - 210, 80, textColor);
-    renderText(timeText, SCREEN_WIDTH / 2 - 50, 20, textColor);
+    renderText(scoreInfoX, 10, 80, textColor1);
+    renderText(scoreInfoO, SCREEN_WIDTH - 210, 80, textColor1);
+    renderText(timeText, SCREEN_WIDTH / 2 - 50, 20, textColor2);
 
     presentScene();
 }
